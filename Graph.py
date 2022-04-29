@@ -54,17 +54,21 @@ class Graph(object):
         for i in range(len(arrayGraph)):
             for j in range(len(arrayGraph)):
                 currentConexions = []
+                listOfTuples = [()]
+
                 x = arrayGraph[i][:]
                 #Remove current item
                 xpop = [t for t,x in enumerate(x) if t!=j]
                 y = arrayGraph[:,j]
                 ypop = [t for t,x in enumerate(y) if t!=i]
-                
-
+                tupleBasedOnX = [][]
+                for z in range(len(xpop)):
+                    
+                    print()
               
                 for elem in ypop:
                     xpop.append(elem)
-                print(xpop)
+                print(tupleBasedOnX)
                 #Check Diagonals for element in the same group
 
                 
