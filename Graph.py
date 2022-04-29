@@ -56,13 +56,15 @@ class Graph(object):
                 currentConexions = []
                 x = arrayGraph[i][:]
                 #Remove current item
-                xpop = [t for k,t in enumerate(x) if k!=j] 
+                xpop = [t for t,x in enumerate(x) if t!=j]
                 y = arrayGraph[:,j]
-                ypop = [t for k,t in enumerate(y) if k!=i]
+                ypop = [t for t,x in enumerate(y) if t!=i]
+                
 
-                print(ypop)
+              
                 for elem in ypop:
                     xpop.append(elem)
+                print(xpop)
                 #Check Diagonals for element in the same group
 
                 
