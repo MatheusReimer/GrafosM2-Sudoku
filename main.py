@@ -10,7 +10,7 @@ def welcome():
     print("Bem vindo ao gerenciador de grafos:\n")
     size = 1
     while not is_square(size) or size<4 or size>16: 
-        print("Qual sera o tamanho do seu sudoku? - defina quantidade de colunas?")
+        print("Qual sera o tamanho do seu sudoku? - defina quantidade de colunas")
         size = int(input())
     graph = Graph(size)
 
@@ -20,8 +20,9 @@ def welcome():
 def main():
     graph = welcome()
     graph.createGraph()
-    degreeMap = graph.createDegreeMap()
-    graph.fillInGraph()
-    #printGraph(degreeMap)
+    segmentedMap = graph.createSegmentedMap()
+    degreeMap = graph.createDegreeMap(segmentedMap)
+    #startingPoint = graph.getStartingPoint()
+
 
 main()

@@ -1,6 +1,9 @@
 import imp
 from enum import Enum
 from posixpath import split
+from xml.dom.minidom import Element
+
+from matplotlib.style import use
 from MatrixTypes import Matrix
 import numpy as np
 class Color(Enum):
@@ -22,7 +25,7 @@ class Graph(object):
         print(arrayGraph)
         return arrayGraph
 
-    def createDegreeMap(self):
+    def createSegmentedMap(self):
         #+2 to make the bounds
         sizeWithBounds = self.size+2
         #Its always going to have at least those connections
@@ -36,14 +39,59 @@ class Graph(object):
 
         x = Matrix(degreeArray)
         if self.size==4:
-            x.Matrix4x4()
+            return x.Matrix4x4()
         elif self.size==9:
-            x.Matrix9x9()
+            return x.Matrix9x9()
         elif self.size==16:
-            x.Matrix16x16()                
+            return x.Matrix16x16()                
 
-    def fillInGraph(self):
-        print()
+
+    
+    def createDegreeMap(self,segmentedMap):
+        #Create first a list of indexes connected to each index
+        print(segmentedMap)
+        arrayGraph = segmentedMap
+        for i in range(len(arrayGraph)):
+            for j in range(len(arrayGraph)):
+                currentConexions = []
+                x = arrayGraph[i][:]
+                #Remove current item
+                xpop = [t for k,t in enumerate(x) if k!=j] 
+                y = arrayGraph[:,j]
+                ypop = [t for k,t in enumerate(y) if k!=i]
+
+                print(ypop)
+                for elem in ypop:
+                    xpop.append(elem)
+                #Check Diagonals for element in the same group
+
+                
+                #try:
+                #    if(arrayGraph[i-1][j+1] == arrayGraph[i][j]):
+                #        print("1-Deu boa",i,j) 
+                #    if(arrayGraph[i-1][j-1]== arrayGraph[i][j]):
+                #        print("2-Deu boa",i,j) 
+                #    if(arrayGraph[i+1][j+1]== arrayGraph[i][j]):
+                #        print("3-Deu boa",i,j) 
+                #    if(arrayGraph[i+1][j-1]== arrayGraph[i][j]):
+                #        print("4-Deu boa",i,j) 
+                #except IndexError:
+                #    print("Deu ruim")
+                #currentConexions.append(xpop)
+
+
+             
+
+
+    def getStartingPoint(self):
+        userInput = (-1,-1)
+        while(userInput[0]>self.size or userInput[0]<=0 or userInput[1]>self.size or userInput[1]<=0):
+            print("Qual sera o ponto inicial do grafo? Digite Linha ->Enter ->Coluna -> Enter")
+            x = int(input())
+            y = int(input())
+            userInput = (x,y)
+        
+        return userInput
 
     def graphToDict(self):
         ##TURNS THE MATRIX OF 1 AND 0 INTO A DICTONARY OF THE INDEXES

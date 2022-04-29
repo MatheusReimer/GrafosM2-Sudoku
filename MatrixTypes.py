@@ -19,7 +19,6 @@ class Matrix(object):
 
        
         x=np.vstack([np.hstack([upper_left, upper_right]), np.hstack([lower_left, lower_right])])
-        print(x)
         return x
 
 
@@ -53,7 +52,7 @@ class Matrix(object):
         for i in range (len(lower_right)):lower_right[i] = 9
 
         x=np.vstack([np.hstack([upper_left, upper_mid, upper_right]),np.hstack([mid_left,center, mid_right]), np.hstack([lower_left,lower_mid, lower_right])])
-        print(x)
+        return x
 
     def Matrix16x16(self):
         upper = np.hsplit(np.vsplit(self.arr, 4)[0], 4)
@@ -104,4 +103,4 @@ class Matrix(object):
         np.hstack([mid_top_left,mid_top_left_mid,mid_top_right_mid,mid_top_right_mid]), 
         np.hstack([ mid_lower_left,mid_lower_left_mid,mid_lower_right_mid,mid_lower_right]),
         np.hstack([ lower_left,lower_left_mid,lower_right_mid,lower_right])])
-        print(x)
+        return x
