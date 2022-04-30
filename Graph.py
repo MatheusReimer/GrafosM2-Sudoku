@@ -6,6 +6,10 @@ from xml.dom.minidom import Element
 from matplotlib.style import use
 from MatrixTypes import Matrix
 import numpy as np
+
+
+#CRIAR UMA FUNCAO QUE CRIE UMA MATRIZ DE 1-16 E QUE COMPARANDO COM AS CONEXOES OBTIDAS NA FUNCAO CREATE SEGMENTED, PEGANDO AO INVES DOS INDICES, OS NUMEROS QUE CADA VERTICE FAZ CONEXAO COM. DEPOIS APLICAR NA MATRIZ VERTICES X VERTICES
+
 class Color(Enum):
     RED = 1
     GREEN = 2
@@ -22,7 +26,6 @@ class Graph(object):
 
     def createGraph(self):
         arrayGraph = np.zeros([self.size,self.size])
-        print(arrayGraph)
         return arrayGraph
 
     def createSegmentedMap(self):
@@ -45,12 +48,37 @@ class Graph(object):
         elif self.size==16:
             return x.Matrix16x16()                
 
+    def listRelations(self,degreeMap):
+        matrixOfRelations = np.zeros((self.size,self.size))
+        count  =0
+        for i in range(len(matrixOfRelations)):
+            for j in range(len(matrixOfRelations)):
+                matrixOfRelations[i][j] = count
+                count = count +1
+        shape = (np.shape(degreeMap))
 
+        listOfList = list()
+        for i in range(shape[0]):
+            listOfConections = list()
+            for j in range(shape[1]):
+                listOfConections.append(matrixOfRelations[degreeMap[i][j][0]][degreeMap[i][j][1]])
+
+            listOfList.append(listOfConections)
+        return listOfList
     
+    def createAdjMatrix(self,listOfRelations):
+        matrixOfRelations = listOfRelations
+        adjMatrix = np.zeros((self.vertices,self.vertices))
+        for i in range(len(adjMatrix)):
+            for j in range(len(matrixOfRelations[i])):
+                adjMatrix[i][int(matrixOfRelations[i][j])] = 1
+
+        print(adjMatrix)
     def createDegreeMap(self,segmentedMap):
         #Create first a list of indexes connected to each index
         print(segmentedMap)
         arrayGraph = segmentedMap
+        listOfTuplesList = list()
         for i in range(len(arrayGraph)):
             for j in range(len(arrayGraph)):
                 currentConexions  = [[0]*len(arrayGraph) for u in range(len(arrayGraph))]
@@ -64,38 +92,30 @@ class Graph(object):
                 #xpop example = [1, 2, 3, 1, 2, 3]
                 listOfTuples = list()
                 for z in xpop:
-                    xtuple = (z,i)
+                    xtuple = (i,z)
                     #print(xtuple)
                     listOfTuples.append(xtuple)
                 for z in ypop:
-                    ytuple = (j,z)
+                    ytuple = (z,j)
                     #print(ytuple)
                     listOfTuples.append(ytuple)
-
-                    
                 #Check Diagonals for element in the same group
-
-               
                 
                 if(i<(len(arrayGraph)-1) and j>0 and arrayGraph[i+1][j-1] == arrayGraph[i][j] ):
                     tuplet = (i+1,j-1)
                     listOfTuples.append(tuplet)
                                     
-                elif(j<(len(arrayGraph)-1) and i>0 and arrayGraph[i-1][j+1] == arrayGraph[i][j] ):
+                if(j<(len(arrayGraph)-1) and i>0 and arrayGraph[i-1][j+1] == arrayGraph[i][j] ):
                     tuplet = (i-1,j+1)
                     listOfTuples.append(tuplet)
-                elif(i>0 and j>0 and arrayGraph[i-1][j-1]==arrayGraph[i][j]):
+                if(i>0 and j>0 and arrayGraph[i-1][j-1]==arrayGraph[i][j]):
                     tuplet = (i-1,j-1)
                     listOfTuples.append(tuplet)
-                elif(i<len(arrayGraph)-1 and j<len(arrayGraph)-1 and arrayGraph[i+1][j+1] == arrayGraph[i][j]):
+                if(i<len(arrayGraph)-1 and j<len(arrayGraph)-1 and arrayGraph[i+1][j+1] == arrayGraph[i][j]):
                     tuplet = (i+1,j+1)
-                    listOfTuples.append(tuplet)                
-         
-         
-                
-                print(listOfTuples)
-             
-
+                    listOfTuples.append(tuplet)                         
+                listOfTuplesList.append(listOfTuples)
+        return listOfTuplesList
 
     def getStartingPoint(self):
         userInput = (-1,-1)

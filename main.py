@@ -22,6 +22,10 @@ def main():
     graph.createGraph()
     segmentedMap = graph.createSegmentedMap()
     degreeMap = graph.createDegreeMap(segmentedMap)
+    listOfRelations = graph.listRelations(degreeMap)
+    print(listOfRelations)
+    adjMatrix = graph.createAdjMatrix(listOfRelations)
+    
     #startingPoint = graph.getStartingPoint()
 
 
