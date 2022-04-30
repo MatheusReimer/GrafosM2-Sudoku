@@ -53,39 +53,47 @@ class Graph(object):
         arrayGraph = segmentedMap
         for i in range(len(arrayGraph)):
             for j in range(len(arrayGraph)):
-                currentConexions = []
-                listOfTuples = [()]
-
+                currentConexions  = [[0]*len(arrayGraph) for u in range(len(arrayGraph))]
                 x = arrayGraph[i][:]
                 #Remove current item
                 xpop = [t for t,x in enumerate(x) if t!=j]
                 y = arrayGraph[:,j]
                 ypop = [t for t,x in enumerate(y) if t!=i]
-                tupleBasedOnX = [][]
-                for z in range(len(xpop)):
+
+                ################ x  x  x  y  y  y
+                #xpop example = [1, 2, 3, 1, 2, 3]
+                listOfTuples = list()
+                for z in xpop:
+                    xtuple = (z,i)
+                    #print(xtuple)
+                    listOfTuples.append(xtuple)
+                for z in ypop:
+                    ytuple = (j,z)
+                    #print(ytuple)
+                    listOfTuples.append(ytuple)
+
                     
-                    print()
-              
-                for elem in ypop:
-                    xpop.append(elem)
-                print(tupleBasedOnX)
                 #Check Diagonals for element in the same group
 
+               
                 
-                #try:
-                #    if(arrayGraph[i-1][j+1] == arrayGraph[i][j]):
-                #        print("1-Deu boa",i,j) 
-                #    if(arrayGraph[i-1][j-1]== arrayGraph[i][j]):
-                #        print("2-Deu boa",i,j) 
-                #    if(arrayGraph[i+1][j+1]== arrayGraph[i][j]):
-                #        print("3-Deu boa",i,j) 
-                #    if(arrayGraph[i+1][j-1]== arrayGraph[i][j]):
-                #        print("4-Deu boa",i,j) 
-                #except IndexError:
-                #    print("Deu ruim")
-                #currentConexions.append(xpop)
-
-
+                if(i<(len(arrayGraph)-1) and j>0 and arrayGraph[i+1][j-1] == arrayGraph[i][j] ):
+                    tuplet = (i+1,j-1)
+                    listOfTuples.append(tuplet)
+                                    
+                elif(j<(len(arrayGraph)-1) and i>0 and arrayGraph[i-1][j+1] == arrayGraph[i][j] ):
+                    tuplet = (i-1,j+1)
+                    listOfTuples.append(tuplet)
+                elif(i>0 and j>0 and arrayGraph[i-1][j-1]==arrayGraph[i][j]):
+                    tuplet = (i-1,j-1)
+                    listOfTuples.append(tuplet)
+                elif(i<len(arrayGraph)-1 and j<len(arrayGraph)-1 and arrayGraph[i+1][j+1] == arrayGraph[i][j]):
+                    tuplet = (i+1,j+1)
+                    listOfTuples.append(tuplet)                
+         
+         
+                
+                print(listOfTuples)
              
 
 
