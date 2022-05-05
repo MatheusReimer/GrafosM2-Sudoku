@@ -25,8 +25,8 @@ def main():
     listOfRelations = graph.listRelations(degreeMap)
     print(listOfRelations)
     adjMatrix = graph.createAdjMatrix(listOfRelations)
-    
-    #startingPoint = graph.getStartingPoint()
+    startingPoint = graph.getStartingPoint()
+    colorGraph = graph.createColorGraph(startingPoint,adjMatrix,listOfRelations)
 
 
 main()

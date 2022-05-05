@@ -1,6 +1,8 @@
 import imp
 from enum import Enum
+from itertools import accumulate
 from posixpath import split
+from turtle import color
 from xml.dom.minidom import Element
 
 from matplotlib.style import use
@@ -11,6 +13,7 @@ import numpy as np
 #CRIAR UMA FUNCAO QUE CRIE UMA MATRIZ DE 1-16 E QUE COMPARANDO COM AS CONEXOES OBTIDAS NA FUNCAO CREATE SEGMENTED, PEGANDO AO INVES DOS INDICES, OS NUMEROS QUE CADA VERTICE FAZ CONEXAO COM. DEPOIS APLICAR NA MATRIZ VERTICES X VERTICES
 
 class Color(Enum):
+    YELLOW = 0
     RED = 1
     GREEN = 2
     BLUE = 3
@@ -21,13 +24,58 @@ class Graph(object):
     def __init__(self,size):
         self.size = int(size)
         self.vertices = size * size
-        self.conexionList = list()
-
+        self.connections = []
 
     def createGraph(self):
         arrayGraph = np.zeros([self.size,self.size])
         return arrayGraph
 
+        
+    def createColorGraph(self,userInput,adjMatrix,listOfRelations):
+        color = 0
+        colorMatrix = np.zeros((self.size,self.size))
+        colorMatrix[userInput[0]][userInput[1]] = color
+        edgesRelations = listOfRelations
+        accumulateGraph = self.createAccumulativeGraph()
+        alreadyColored = []
+        colorDegree = np.zeros((self.vertices))
+        chosenNumber = int(accumulateGraph[userInput[0]][userInput[1]])
+
+
+        alreadyColored.append(chosenNumber)
+        for i in range(len(colorDegree)):
+            for j in (edgesRelations[chosenNumber]):
+                if i==j:
+                    colorDegree[i] = colorDegree[i] +1
+        #Add +1 to all my conections
+        #ColorDegree = [0. 1. 1. 1. 1. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0. 0.]
+        maxDegree = 0
+        for allElements in range(self.vertices-1):
+        #while alreadyColored.count != self.vertices:
+
+            for all in range(len(colorDegree)):
+                if colorDegree[all] > maxDegree and colorDegree[all] not in alreadyColored:
+                    maxDegree = colorDegree[all]
+            #maxDegree = 1(index)
+            #Preciso pegar as cores de todas as conexoes que ja foram inseridas na tabela e que fazem conexao com o maxDegree/Depois, verificar qual cor posso usar para aquele elemento
+            color = 0
+            for all in edgesRelations[int(maxDegree)]:
+                if all in alreadyColored:
+                    color=color+1
+            alreadyColored.append(maxDegree)        
+            ##Adicionar a cor na matriz de cores
+            ##Pegando o indice pensando na matriz size*size
+            first,sec = np.where(accumulateGraph == maxDegree)
+            
+            colorMatrix[int(first)][int(sec)] = color
+            ##Falta adicionar 1 pra todas as conexoes
+            for i in range(len(colorDegree)):
+                for j in (edgesRelations[int(maxDegree)]):
+                    if i==j:
+                        colorDegree[i] = colorDegree[i] +1
+
+            print(alreadyColored)                 
+            print(colorMatrix)
     def createSegmentedMap(self):
         #+2 to make the bounds
         sizeWithBounds = self.size+2
@@ -64,6 +112,8 @@ class Graph(object):
                 listOfConections.append(matrixOfRelations[degreeMap[i][j][0]][degreeMap[i][j][1]])
 
             listOfList.append(listOfConections)
+        for i in range(self.vertices):
+            self.connections.insert(i,listOfList[i]) 
         return listOfList
     
     def createAdjMatrix(self,listOfRelations):
@@ -117,14 +167,24 @@ class Graph(object):
                 listOfTuplesList.append(listOfTuples)
         return listOfTuplesList
 
+
+
+    def createAccumulativeGraph(self):
+        arr = np.zeros((self.size,self.size))
+        count =0
+        for i in range ((self.size)):
+            for j in range ((self.size)):
+                arr[i][j] = count
+                count = count +1 
+        return arr
+
     def getStartingPoint(self):
         userInput = (-1,-1)
-        while(userInput[0]>self.size or userInput[0]<=0 or userInput[1]>self.size or userInput[1]<=0):
+        while(userInput[0]>self.size or userInput[0]<0 or userInput[1]>self.size or userInput[1]<0):
             print("Qual sera o ponto inicial do grafo? Digite Linha ->Enter ->Coluna -> Enter")
             x = int(input())
             y = int(input())
             userInput = (x,y)
-        
         return userInput
 
     def graphToDict(self):
