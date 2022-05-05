@@ -30,7 +30,6 @@ class Graph(object):
         arrayGraph = np.zeros([self.size,self.size])
         return arrayGraph
 
-        
     def createColorGraph(self,userInput,adjMatrix,listOfRelations):
         color = 0
         colorMatrix = np.zeros((self.size,self.size))
@@ -40,8 +39,7 @@ class Graph(object):
         alreadyColored = []
         colorDegree = np.zeros((self.vertices))
         chosenNumber = int(accumulateGraph[userInput[0]][userInput[1]])
-
-
+      
         alreadyColored.append(chosenNumber)
         for i in range(len(colorDegree)):
             for j in (edgesRelations[chosenNumber]):
@@ -49,13 +47,15 @@ class Graph(object):
                     colorDegree[i] = colorDegree[i] +1
         #Add +1 to all my conections
         #ColorDegree = [0. 1. 1. 1. 1. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0. 0.]
-        maxDegree = 0
+        
         for allElements in range(self.vertices-1):
-        #while alreadyColored.count != self.vertices:
-
+        #while alreadyColored.count != colorMatrix.size:
+            maxDegree = 0.
+            ##get index of colorDegree
             for all in range(len(colorDegree)):
-                if colorDegree[all] > maxDegree and colorDegree[all] not in alreadyColored:
-                    maxDegree = colorDegree[all]
+                if colorDegree[all] >= maxDegree and all not in alreadyColored:
+                    maxDegree = all 
+                    break
             #maxDegree = 1(index)
             #Preciso pegar as cores de todas as conexoes que ja foram inseridas na tabela e que fazem conexao com o maxDegree/Depois, verificar qual cor posso usar para aquele elemento
             color = 0
@@ -83,8 +83,7 @@ class Graph(object):
                     if i==j:
                         colorDegree[i] = colorDegree[i] +1
 
-            print(alreadyColored)                 
-            print(colorMatrix)
+        print(colorMatrix)
     def createSegmentedMap(self):
         #+2 to make the bounds
         sizeWithBounds = self.size+2
@@ -112,8 +111,7 @@ class Graph(object):
             for j in range(len(matrixOfRelations)):
                 matrixOfRelations[i][j] = count
                 count = count +1
-        shape = (np.shape(degreeMap))
-
+        shape = np.shape(degreeMap)
         listOfList = list()
         for i in range(shape[0]):
             listOfConections = list()
@@ -137,10 +135,9 @@ class Graph(object):
         #Create first a list of indexes connected to each index
         print(segmentedMap)
         arrayGraph = segmentedMap
-        listOfTuplesList = list()
+        listOfTuplesList = []
         for i in range(len(arrayGraph)):
             for j in range(len(arrayGraph)):
-                currentConexions  = [[0]*len(arrayGraph) for u in range(len(arrayGraph))]
                 x = arrayGraph[i][:]
                 #Remove current item
                 xpop = [t for t,x in enumerate(x) if t!=j]
@@ -162,8 +159,7 @@ class Graph(object):
                 
                 if(i<(len(arrayGraph)-1) and j>0 and arrayGraph[i+1][j-1] == arrayGraph[i][j] ):
                     tuplet = (i+1,j-1)
-                    listOfTuples.append(tuplet)
-                                    
+                    listOfTuples.append(tuplet)               
                 if(j<(len(arrayGraph)-1) and i>0 and arrayGraph[i-1][j+1] == arrayGraph[i][j] ):
                     tuplet = (i-1,j+1)
                     listOfTuples.append(tuplet)
@@ -174,6 +170,8 @@ class Graph(object):
                     tuplet = (i+1,j+1)
                     listOfTuples.append(tuplet)                         
                 listOfTuplesList.append(listOfTuples)
+        print(listOfTuplesList)
+        print(np.stack(listOfTuplesList).shape)
         return listOfTuplesList
 
 
