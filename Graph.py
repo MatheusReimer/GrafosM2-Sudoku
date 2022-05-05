@@ -59,9 +59,18 @@ class Graph(object):
             #maxDegree = 1(index)
             #Preciso pegar as cores de todas as conexoes que ja foram inseridas na tabela e que fazem conexao com o maxDegree/Depois, verificar qual cor posso usar para aquele elemento
             color = 0
+            adjColors = set()
+            ##NAO ESTA PEGANDO AS CORES, SO ESTA PEGANDO OS VERTICES QUE JA FORAM 
             for all in edgesRelations[int(maxDegree)]:
                 if all in alreadyColored:
-                    color=color+1
+                    i,j = np.where(accumulateGraph==all)
+                    currentColor = colorMatrix[int(i)][int(j)]
+                    adjColors.add(currentColor)
+            ##PASSAR PELO ADJCOLORS VENDO QUAL COR NAO FOI USADA E ATRIBUIR A COLORS QUANDO ACHAR
+      
+            for i in range(len(adjColors)+1):
+                if color in adjColors:
+                    color = color + 1
             alreadyColored.append(maxDegree)        
             ##Adicionar a cor na matriz de cores
             ##Pegando o indice pensando na matriz size*size
