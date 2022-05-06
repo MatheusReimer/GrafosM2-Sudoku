@@ -19,6 +19,10 @@ class Color(Enum):
     BLUE = 3
 
 
+class Vertice(object):
+        def __init__(self,number):
+            self.colorsConnected = set()
+            self.number = number
 
 class Graph(object):
     def __init__(self,size):
@@ -30,7 +34,23 @@ class Graph(object):
         arrayGraph = np.zeros([self.size,self.size])
         return arrayGraph
 
-    def createColorGraph(self,userInput,adjMatrix,listOfRelations):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def createColorGraph(self,userInput,adjMatrix,listOfRelations,degreeMap):
         color = 0
         colorMatrix = np.zeros((self.size,self.size))
         colorMatrix[userInput[0]][userInput[1]] = color
@@ -40,50 +60,77 @@ class Graph(object):
         colorDegree = np.zeros((self.vertices))
         chosenNumber = int(accumulateGraph[userInput[0]][userInput[1]])
       
-        alreadyColored.append(chosenNumber)
-        for i in range(len(colorDegree)):
-            for j in (edgesRelations[chosenNumber]):
-                if i==j:
-                    colorDegree[i] = colorDegree[i] +1
-        #Add +1 to all my conections
-        #ColorDegree = [0. 1. 1. 1. 1. 1. 0. 0. 1. 0. 0. 0. 1. 0. 0. 0.]
-        
-        for allElements in range(self.vertices-1):
-        #while alreadyColored.count != colorMatrix.size:
-            maxDegree = 0.
-            ##get index of colorDegree
-            for all in range(len(colorDegree)):
-                if colorDegree[all] >= maxDegree and all not in alreadyColored:
-                    maxDegree = all 
-                    break
-            #maxDegree = 1(index)
-            #Preciso pegar as cores de todas as conexoes que ja foram inseridas na tabela e que fazem conexao com o maxDegree/Depois, verificar qual cor posso usar para aquele elemento
-            color = 0
-            adjColors = set()
-            ##NAO ESTA PEGANDO AS CORES, SO ESTA PEGANDO OS VERTICES QUE JA FORAM 
-            for all in edgesRelations[int(maxDegree)]:
-                if all in alreadyColored:
-                    i,j = np.where(accumulateGraph==all)
-                    currentColor = colorMatrix[int(i)][int(j)]
-                    adjColors.add(currentColor)
-            ##PASSAR PELO ADJCOLORS VENDO QUAL COR NAO FOI USADA E ATRIBUIR A COLORS QUANDO ACHAR
-      
-            for i in range(len(adjColors)+1):
-                if color in adjColors:
-                    color = color + 1
-            alreadyColored.append(maxDegree)        
-            ##Adicionar a cor na matriz de cores
-            ##Pegando o indice pensando na matriz size*size
-            first,sec = np.where(accumulateGraph == maxDegree)
-            
-            colorMatrix[int(first)][int(sec)] = color
-            ##Falta adicionar 1 pra todas as conexoes
-            for i in range(len(colorDegree)):
-                for j in (edgesRelations[int(maxDegree)]):
-                    if i==j:
-                        colorDegree[i] = colorDegree[i] +1
+        alreadyColored.append(float(chosenNumber))
+        arrayOfVertices = list()
+        #numerando cada um dos vertices
+        for i in range(self.vertices):
+            vertice = Vertice(float(i))
+            arrayOfVertices.append((vertice))
+        print(edgesRelations[chosenNumber])
+        for vertices in range(len(arrayOfVertices)):
+            for item in edgesRelations[chosenNumber]:
+                if(arrayOfVertices[vertices].number==item):
+                    #ADDING COLOR TO ALL THE ITEMS THAT MAKE CONNECTION TO CHOSEN NUMBER
+                    arrayOfVertices[vertices].colorsConnected.add(color)
 
+        for allElements in range(self.vertices-1):
+
+            index = 0
+            maxDegree = 0      
+            color = 0  
+        
+            ##GET NEXT ELEMENT
+            for i in range(self.vertices):
+                colorsConnected = arrayOfVertices[i].colorsConnected
+                number = arrayOfVertices[i].number
+                if(len(colorsConnected)>=maxDegree and  number not in alreadyColored):
+                    maxDegree = len(colorsConnected)
+                    index = number
+            print("MAX DEGREEEEE", index)
+            qty = arrayOfVertices[int(index)].colorsConnected
+            for i in qty:
+                while color== i:
+                    color = color +1
+
+            for vertices in range(len(arrayOfVertices)):
+                for item in edgesRelations[int(index)]:
+                    if(arrayOfVertices[vertices].number==item):
+                        #ADDING COLOR TO ALL THE ITEMS THAT MAKE CONNECTION TO CHOSEN NUMBER
+                        arrayOfVertices[vertices].colorsConnected.add(color)
+            
+            alreadyColored.append(index)
+            i,j = np.where(accumulateGraph==index)
+            colorMatrix[i[0]][j[0]] = color
+        count = 0
+        for all in arrayOfVertices:
+            
+            print(count," ",all.colorsConnected)
+            count = count +1
         print(colorMatrix)
+
+        #pegar proximo maxDegree
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def createSegmentedMap(self):
         #+2 to make the bounds
         sizeWithBounds = self.size+2
@@ -111,12 +158,13 @@ class Graph(object):
             for j in range(len(matrixOfRelations)):
                 matrixOfRelations[i][j] = count
                 count = count +1
-        shape = np.shape(degreeMap)
         listOfList = list()
-        for i in range(shape[0]):
+        for i in degreeMap:
             listOfConections = list()
-            for j in range(shape[1]):
-                listOfConections.append(matrixOfRelations[degreeMap[i][j][0]][degreeMap[i][j][1]])
+            for j in i:
+                x = j[0]
+                y = j[1]
+                listOfConections.append(matrixOfRelations[x][y])
 
             listOfList.append(listOfConections)
         for i in range(self.vertices):
@@ -129,11 +177,10 @@ class Graph(object):
         for i in range(len(adjMatrix)):
             for j in range(len(matrixOfRelations[i])):
                 adjMatrix[i][int(matrixOfRelations[i][j])] = 1
+        return adjMatrix
 
-        print(adjMatrix)
     def createDegreeMap(self,segmentedMap):
         #Create first a list of indexes connected to each index
-        print(segmentedMap)
         arrayGraph = segmentedMap
         listOfTuplesList = []
         for i in range(len(arrayGraph)):
@@ -170,8 +217,7 @@ class Graph(object):
                     tuplet = (i+1,j+1)
                     listOfTuples.append(tuplet)                         
                 listOfTuplesList.append(listOfTuples)
-        print(listOfTuplesList)
-        print(np.stack(listOfTuplesList).shape)
+                
         return listOfTuplesList
 
 

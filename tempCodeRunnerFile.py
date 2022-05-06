@@ -1,1 +1,1 @@
-listRelations
+adjMatrix

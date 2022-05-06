@@ -22,11 +22,13 @@ def main():
     graph.createGraph()
     segmentedMap = graph.createSegmentedMap()
     degreeMap = graph.createDegreeMap(segmentedMap)
-    #listOfRelations = graph.listRelations(degreeMap)
-    #print(listOfRelations)
-    #adjMatrix = graph.createAdjMatrix(listOfRelations)
-    #startingPoint = graph.getStartingPoint()
-    #colorGraph = graph.createColorGraph(startingPoint,adjMatrix,listOfRelations)
+    
+    listOfRelations = graph.listRelations(degreeMap)
+    adjMatrix = graph.createAdjMatrix(listOfRelations)
+    startingPoint = graph.getStartingPoint()
+    colorGraph = graph.createColorGraph(startingPoint,adjMatrix,listOfRelations,degreeMap)
+
+    
 
 
 main()
